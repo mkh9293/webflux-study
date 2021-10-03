@@ -23,4 +23,10 @@ public class FluxAndMonoController {
                 .delayElements(Duration.ofSeconds(1))
                 .log();
     }
+
+    @GetMapping(value = "/fluxstream-infinite", produces = MediaType.APPLICATION_NDJSON_VALUE)
+    public Flux<Long> returnInfiniteFluxStream() {
+        return Flux.interval(Duration.ofSeconds(1))
+                .log();
+    }
 }
