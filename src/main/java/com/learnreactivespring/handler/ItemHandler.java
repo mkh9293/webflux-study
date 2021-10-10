@@ -80,4 +80,8 @@ public class ItemHandler {
                 .switchIfEmpty(notFound);
 
     }
+
+    public Mono<ServerResponse> itemEx(ServerRequest serverRequest) {
+        throw new RuntimeException("RuntimeException Occured");
+    }
 }
