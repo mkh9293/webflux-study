@@ -55,4 +55,11 @@ public class ItemController {
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 
     }
+
+    @GetMapping(ITEM_END_POINT_V1+"/runtimeException")
+    public Flux<Item> runtimeException() {
+        return itemReactiveRepository.findAll()
+                .concatWith(Mono.error(new RuntimeException("RuntimeException Occured.")));
+    }
+
 }
