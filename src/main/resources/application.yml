@@ -27,4 +27,4 @@ spring:
       database: local
 ---
 spring:
-  profiles: test
+  profiles: dev

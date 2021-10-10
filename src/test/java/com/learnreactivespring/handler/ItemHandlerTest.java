@@ -1,6 +1,5 @@
 package com.learnreactivespring.handler;
 
-import com.learnreactivespring.constants.v1.ItemConstants;
 import com.learnreactivespring.document.Item;
 import com.learnreactivespring.repository.ItemReactiveRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +19,6 @@ import reactor.core.publisher.Mono;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.learnreactivespring.constants.v1.ItemConstants.ITEM_END_POINT_V1;
 import static com.learnreactivespring.constants.v1.ItemConstants.ITEM_FUNCTIONAL_END_POINT_V1;
 
 @SpringBootTest
