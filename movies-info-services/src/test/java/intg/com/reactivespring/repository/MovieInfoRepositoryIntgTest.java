@@ -97,4 +97,22 @@ class MovieInfoRepositoryIntgTest {
                 .expectNextCount(2)
                 .verifyComplete();
     }
+
+    @Test
+    void findByYear() {
+        var movieInfoFlux = movieInfoRepository.findByYear(2008).log();
+
+        StepVerifier.create(movieInfoFlux)
+                .expectNextCount(1)
+                .verifyComplete();
+    }
+
+    @Test
+    void findByName() {
+        var movieInfoFlux = movieInfoRepository.findByName("The Dark Knight").log();
+
+        StepVerifier.create(movieInfoFlux)
+                .expectNextCount(1)
+                .verifyComplete();
+    }
 }
