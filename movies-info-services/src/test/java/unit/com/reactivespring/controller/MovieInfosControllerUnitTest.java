@@ -164,6 +164,29 @@ public class MovieInfosControllerUnitTest {
     @Test
     void addMovieInfo_validation2() {
         var movieInfos = new MovieInfo(null, "",
+                -2005, List.of(), LocalDate.parse("2005-06-15"));
+
+        webTestClient
+                .post()
+                .uri(MOVIE_INFO_URL)
+                .bodyValue(movieInfos)
+                .exchange()
+                .expectStatus()
+                .isBadRequest()
+                .expectBody(String.class)
+                .consumeWith(movieInfoEntityExchangeResult -> {
+                    var responseBody = movieInfoEntityExchangeResult.getResponseBody();
+
+                    var expectErrMsg = "MovieInfo.cast must be not null, MovieInfo.name must be present, MovieInfo.year must be positive value";
+                    System.out.println("response body : " + responseBody);
+                    assert responseBody != null;
+                    assertEquals(expectErrMsg, responseBody);
+                });
+    }
+
+    @Test
+    void addMovieInfo_validation3() {
+        var movieInfos = new MovieInfo(null, "",
                 -2005, List.of(""), LocalDate.parse("2005-06-15"));
 
         webTestClient
@@ -182,6 +205,5 @@ public class MovieInfosControllerUnitTest {
                     assert responseBody != null;
                     assertEquals(expectErrMsg, responseBody);
                 });
-
     }
 }
