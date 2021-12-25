@@ -133,4 +133,55 @@ public class MovieInfosControllerUnitTest {
                 .expectBody()
                 .isEmpty();
     }
+
+    @Test
+    void addMovieInfo_validation() {
+        var movieInfos = new MovieInfo(null, "",
+                -2005, List.of("Christian Bale", "Michael Cane"), LocalDate.parse("2005-06-15"));
+
+        when(moviesInfoServiceMock.addMovieInfo(isA(MovieInfo.class))).thenReturn(
+                Mono.just(new MovieInfo("mockId", "Batman Begins1",
+                        2005, List.of("Christian Bale", "Michael Cane"), LocalDate.parse("2005-06-15")))
+        );
+
+        webTestClient
+                .post()
+                .uri(MOVIE_INFO_URL)
+                .bodyValue(movieInfos)
+                .exchange()
+                .expectStatus()
+                .isBadRequest()
+                .expectBody(String.class)
+                .consumeWith(movieInfoEntityExchangeResult -> {
+                    var responseBody = movieInfoEntityExchangeResult.getResponseBody();
+
+                    System.out.println("response body : " + responseBody);
+                    assert responseBody != null;
+                });
+
+    }
+
+    @Test
+    void addMovieInfo_validation2() {
+        var movieInfos = new MovieInfo(null, "",
+                -2005, List.of(""), LocalDate.parse("2005-06-15"));
+
+        webTestClient
+                .post()
+                .uri(MOVIE_INFO_URL)
+                .bodyValue(movieInfos)
+                .exchange()
+                .expectStatus()
+                .isBadRequest()
+                .expectBody(String.class)
+                .consumeWith(movieInfoEntityExchangeResult -> {
+                    var responseBody = movieInfoEntityExchangeResult.getResponseBody();
+
+                    var expectErrMsg = "MovieInfo.cast must be present, MovieInfo.name must be present, MovieInfo.year must be positive value";
+                    System.out.println("response body : " + responseBody);
+                    assert responseBody != null;
+                    assertEquals(expectErrMsg, responseBody);
+                });
+
+    }
 }
