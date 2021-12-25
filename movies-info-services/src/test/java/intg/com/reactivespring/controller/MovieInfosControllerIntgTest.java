@@ -100,6 +100,16 @@ class MovieInfosControllerIntgTest {
     }
 
     @Test
+    void getMovieInfoById_notfound() {
+        webTestClient
+                .get()
+                .uri(MOVIE_INFO_URL + "/{id}", "def")
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+    }
+
+    @Test
     void updateMovieInfo() {
         var movieInfos = new MovieInfo(null, "Batman Begins1",
                 2005, List.of("Christian Bale", "Michael Cane"), LocalDate.parse("2005-06-15"));
@@ -114,6 +124,20 @@ class MovieInfosControllerIntgTest {
                 .expectBody()
                 .jsonPath("$.name")
                 .isEqualTo("Batman Begins1");
+    }
+
+    @Test
+    void updateMovieInfo_notfound() {
+        var movieInfos = new MovieInfo(null, "Batman Begins1",
+                2005, List.of("Christian Bale", "Michael Cane"), LocalDate.parse("2005-06-15"));
+
+        webTestClient
+                .put()
+                .uri(MOVIE_INFO_URL + "/{id}", "def")
+                .bodyValue(movieInfos)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
     }
 
     @Test
