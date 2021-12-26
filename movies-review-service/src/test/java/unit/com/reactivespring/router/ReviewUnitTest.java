@@ -57,6 +57,30 @@ public class ReviewUnitTest {
     }
 
     @Test
+    void addReview_validation() {
+        when(reviewReactiveRepository.save(isA(Review.class))).thenReturn(Mono.just(
+                new Review("abc", 1L, "Awesome Movie", 9.0)
+        ));
+
+        var review = new Review(null, null, "Awesome Movie", -9.0);
+
+        webTestClient
+                .post()
+                .uri(REVIEW_URL)
+                .bodyValue(review)
+                .exchange()
+                .expectStatus()
+                .isBadRequest();
+//                .expectBody(Review.class)
+//                .consumeWith(reviewEntityExchangeResult -> {
+//                    var savedReview = reviewEntityExchangeResult.getResponseBody();
+//
+//                    assert savedReview != null;
+//                    assert savedReview.getReviewId() != null;
+//                });
+    }
+
+    @Test
     void getReviews() {
         when(reviewReactiveRepository.findAll()).thenReturn(Flux.fromIterable(
                 List.of(new Review("abc", 1L, "Awesome Movie", 9.0))
