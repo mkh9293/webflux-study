@@ -9,11 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.Exceptions;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.util.retry.Retry;
-
-import java.time.Duration;
 
 @Component
 @Slf4j
@@ -64,4 +61,24 @@ public class MoviesInfoRestClient {
     }
 
 
+    public Flux<MovieInfo> retrieveMovieInfoStream() {
+        var url = moviesInfoUrl.concat("/stream");
+        return webClient
+                .get()
+                .uri(url)
+                .retrieve()
+                .onStatus(HttpStatus::is5xxServerError, clientResponse -> {
+                    log.info("Status code is : {}", clientResponse.statusCode().value());
+                    return clientResponse.bodyToMono(String.class)
+                            .flatMap(resp -> Mono.error(new MoviesInfoServerException(
+                                    "Server Exception in MoviesInfoService " + resp)
+                            ));
+                })
+                .bodyToFlux(MovieInfo.class)
+                .retryWhen(RetryUtil.retrySpec())
+//                .retryWhen(Retry.fixedDelay(3, Duration.ofSeconds(1)))
+//                .retry(3)
+                .log();
+
+    }
 }

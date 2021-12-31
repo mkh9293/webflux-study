@@ -20,6 +20,8 @@ GET-ALL-MOVIE-INFO
 -----------------------
 curl -i http://localhost:8080/v1/movieinfos
 
+curl -i http://localhost:8080/v1/movieinfos/stream
+
 GET-MOVIE-INFO-BY-ID
 -----------------------
 curl -i http://localhost:8080/v1/movieinfos/1
